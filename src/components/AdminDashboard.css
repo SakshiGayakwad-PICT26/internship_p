@@ -1,0 +1,128 @@
+/* Admin Dashboard Styling */
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background: white;
+  color: #283e51;
+  text-align: center;
+  padding: 20px;
+}
+
+.admin-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.options {
+  display: flex;
+  gap: 20px;
+}
+
+/* Option Cards */
+.option-card {
+  background: #4b79a1; /* Light blue */
+  color: white; /* White text */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
+  text-align: center;
+  max-width: 250px;
+  cursor: pointer;
+}
+
+/* Hover Effect - Darker Color */
+.option-card:hover {
+  background: #283e51; /* Dark blue */
+  color: white; /* Maintain white text */
+  transform: scale(1.05);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Icon Styling */
+.icon {
+  font-size: 3rem;
+  color: white; /* Ensure icons are white */
+  margin-bottom: 10px;
+  transition: transform 0.3s, color 0.3s;
+}
+
+/* Icon Effect on Hover */
+.option-card:hover .icon {
+  color: white;
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* Buttons */
+.action-button {
+  background: white;
+  color: #283e51;
+  border: 1px solid #283e51;
+  padding: 10px 15px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s, color 0.3s;
+}
+
+/* Button Color Change on Hover */
+.option-card:hover .action-button {
+  background: #283e51;
+  color: white;
+  border: 1px solid white;
+}
+
+/* Button Hover Effect */
+.action-button:hover {
+  background: #4b79a1;
+  transform: translateY(-3px);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Back to Home Button */
+.back-home-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #4b79a1; /* Light blue */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.back-home-button .back-icon {
+  font-size: 1.2rem;
+}
+
+/* Back Button Hover */
+.back-home-button:hover {
+  background: #283e51; /* Darker shade */
+  transform: scale(1.05);
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+  .options {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .option-card {
+    width: 90%;
+    max-width: 300px;
+  }
+}

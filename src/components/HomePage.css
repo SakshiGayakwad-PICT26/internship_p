@@ -1,0 +1,69 @@
+.home-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  background: linear-gradient(to bottom right, white, white, white);
+}
+
+.text-container {
+  flex: 1;
+  padding: 20px;
+  color: #4b79a1;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.text-container:hover {
+  color: #283e51;
+}
+
+.sign-in-button {
+  background-color: #283e51;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.home-image {
+  max-width: 90%;
+  height: auto;
+}
+
+/* ✅ Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .home-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .text-container {
+    font-size: 24px;
+    padding: 10px;
+  }
+
+  .sign-in-button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
+  .image-container {
+    margin-top: 10px;
+  }
+
+  .home-image {
+    width: 80%;
+    max-width: 300px;
+  }
+}

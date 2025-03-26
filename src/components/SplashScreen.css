@@ -1,0 +1,20 @@
+.splash-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+}
+
+.logo {
+  max-width: 200px; /* Adjust as needed */
+  height: auto;
+}
+
+/* Make logo responsive */
+@media (max-width: 600px) {
+  .logo {
+    max-width: 120px; /* Smaller size for mobile */
+  }
+}
