@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "./Register.css"; // Using the same CSS file for consistency
+import { db, auth } from "../firebase"; // Import Firestore & Auth
+
+import { collection, addDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import "./Register.css";
 
 function Register() {
   const navigate = useNavigate();
@@ -12,11 +16,10 @@ function Register() {
     phone: "",
     password: "",
     confirmPassword: "",
-    subjects: [], // Updated to store multiple selected subjects
+    subjects: [],
   });
   const [errors, setErrors] = useState({});
 
-  // Predefined subjects for each semester
   const semesterSubjects = {
     "FE-I": ["Mathematics-I", "Physics-I", "Chemistry-I", "Programming-I"],
     "FE-II": ["Mathematics-II", "Physics-II", "Chemistry-II", "Programming-II"],
@@ -30,7 +33,6 @@ function Register() {
 
   const validateForm = () => {
     let newErrors = {};
-
     if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
     if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = "Invalid email format";
     if (!formData.phone.match(/^\d{10}$/)) newErrors.phone = "Phone number must be 10 digits";
@@ -38,7 +40,7 @@ function Register() {
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
     if (role === "teacher" && !semester) newErrors.semester = "Please select a semester";
     if (role === "teacher" && formData.subjects.length === 0) newErrors.subjects = "Please select at least one subject";
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -48,19 +50,39 @@ function Register() {
   };
 
   const handleSubjectChange = (subject) => {
-    setFormData((prevState) => {
-      const updatedSubjects = prevState.subjects.includes(subject)
+    setFormData((prevState) => ({
+      ...prevState,
+      subjects: prevState.subjects.includes(subject)
         ? prevState.subjects.filter((sub) => sub !== subject)
-        : [...prevState.subjects, subject];
-      return { ...prevState, subjects: updatedSubjects };
-    });
+        : [...prevState.subjects, subject],
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
+    if (!validateForm()) return;
+
+    try {
+      // Register user in Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
+
+      // Store user data in Firestore
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        role: role,
+        semester: role === "teacher" ? semester : null,
+        subjects: role === "teacher" ? formData.subjects : [],
+      });
+
       alert("Registration successful!");
       navigate("/login");
+    } catch (error) {
+      console.error("Error registering user:", error);
+      alert("Error: " + error.message);
     }
   };
 
@@ -104,40 +126,17 @@ function Register() {
                   <option key={sem} value={sem}>{sem}</option>
                 ))}
               </select>
-              {errors.semester && <p className="error-text">{errors.semester}</p>}
-
-              {semester && (
-                <>
-                  <label className="login-label">Select Subjects</label>
-                  <div className="subject-checkbox-group">
-                    {semesterSubjects[semester].map((subject) => (
-                      <div key={subject} className="subject-checkbox">
-                        <input
-                          type="checkbox"
-                          id={subject}
-                          value={subject}
-                          checked={formData.subjects.includes(subject)}
-                          onChange={() => handleSubjectChange(subject)}
-                        />
-                        <label htmlFor={subject}>{subject}</label>
-                      </div>
-                    ))}
-                  </div>
-                  {errors.subjects && <p className="error-text">{errors.subjects}</p>}
-                </>
-              )}
+              {semesterSubjects[semester]?.map((subject) => (
+                <div key={subject}>
+                  <input type="checkbox" value={subject} onChange={() => handleSubjectChange(subject)} />
+                  {subject}
+                </div>
+              ))}
             </>
           )}
 
           <button type="submit" className="login-button">Register</button>
         </form>
-
-        <p className="register-text">
-          Already have an account?{" "}
-          <span onClick={() => navigate("/login")} className="register-link">
-            Login here
-          </span>
-        </p>
       </div>
     </div>
   );
