@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./TeacherAttendance.css";
@@ -28,12 +29,20 @@ const timetable = {
 
 const TeacherAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const navigate = useNavigate();
 
   const getDayName = (date) => {
     return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(date);
   };
 
   const subjects = timetable[getDayName(selectedDate)] || [];
+
+  const handleMarkAttendance = (subjectName) => {
+    // Store selected subject in localStorage
+    localStorage.setItem("selectedSubject", subjectName);
+    // Navigate to Start.jsx
+    navigate("/start");
+  };
 
   return (
     <div className="attendance-container">
@@ -55,7 +64,7 @@ const TeacherAttendance = () => {
               <span className="table-data">{subject.name}</span>
               <span className="table-data">{subject.time}</span>
               <span className={`table-data ${subject.status === "Pending" ? "pending" : "completed"}`}>{subject.status}</span>
-              <button className="mark-button">Mark</button>
+              <button className="mark-button" onClick={() => handleMarkAttendance(subject.name)}>Mark</button>
               <button className="view-button">View</button>
             </div>
           ))
@@ -63,7 +72,7 @@ const TeacherAttendance = () => {
           <div className="no-subjects">No subjects scheduled for this date.</div>
         )}
       </div>
-      <button className="back-home-button" onClick={() => window.location.href = "/"}>⬅ Back to Home</button>
+      <button className="back-home-button" onClick={() => navigate("/")}>⬅ Back to Home</button>
     </div>
   );
 };
