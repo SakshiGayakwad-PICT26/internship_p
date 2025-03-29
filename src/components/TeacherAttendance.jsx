@@ -3,31 +3,44 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./TeacherAttendance.css";
 
+const timetable = {
+  Monday: [
+    { name: "FY1 OOPC Lecture", time: "10:20 AM - 11:15 AM", status: "Pending" },
+    { name: "FY2 OOPC Lecture", time: "12:00 PM - 03:00 PM", status: "Pending" },
+    { name: "A2 OOPC Lab", time: "03:15 PM - 05:15 PM", status: "Pending" },
+  ],
+  Tuesday: [
+    { name: "B1 OOPC Lab", time: "10:20 AM - 12:10 PM", status: "Pending" },
+    { name: "B2 OOPC Lab", time: "01:00 PM - 03:00 PM", status: "Pending" },
+  ],
+  Wednesday: [
+    { name: "C1 OOPC Lab", time: "01:00 PM - 03:00 PM", status: "Pending" },
+    { name: "C2 OOPC Lab", time: "03:15 PM - 05:15 PM", status: "Pending" },
+  ],
+  Thursday: [
+    { name: "FY1 OOPC Lecture", time: "09:00 AM - 10:00 AM", status: "Pending" },
+    { name: "FY2 OOPC Lecture", time: "11:15 AM - 12:10 PM", status: "Pending" },
+  ],
+  Friday: [
+    { name: "C9 OOPC Lab", time: "08:00 AM - 10:00 AM", status: "Pending" },
+  ],
+};
+
 const TeacherAttendance = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const subjectsByDate = {
-    "2025-03-25": [
-      { name: "Mathematics", time: "10:00 AM - 11:00 AM", status: "Pending" },
-      { name: "Science", time: "11:30 AM - 12:30 PM", status: "Pending" },
-    ],
-    "2025-03-26": [
-      { name: "History", time: "2:00 PM - 3:00 PM", status: "Pending" },
-      { name: "English", time: "3:30 PM - 4:30 PM", status: "Pending" },
-    ],
+
+  const getDayName = (date) => {
+    return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(date);
   };
 
-  const formattedDate = selectedDate.toISOString().split("T")[0];
-  const subjects = subjectsByDate[formattedDate] || [];
+  const subjects = timetable[getDayName(selectedDate)] || [];
 
   return (
     <div className="attendance-container">
       <h1 className="attendance-title">Teacher Attendance</h1>
       <div className="date-picker-container">
         <label>Select Date:</label>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-        />
+        <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} />
       </div>
       <div className="attendance-table">
         <div className="table-header">
@@ -41,23 +54,16 @@ const TeacherAttendance = () => {
             <div key={index} className="table-row">
               <span className="table-data">{subject.name}</span>
               <span className="table-data">{subject.time}</span>
-              <span
-                className={`table-data ${
-                  subject.status === "Pending" ? "pending" : "completed"
-                }`}
-              >
-                {subject.status}
-              </span>
-              <button className="mark-button">Mark Attendance</button>
+              <span className={`table-data ${subject.status === "Pending" ? "pending" : "completed"}`}>{subject.status}</span>
+              <button className="mark-button">Mark</button>
+              <button className="view-button">View</button>
             </div>
           ))
         ) : (
-          <div className="no-subjects">
-            No subjects scheduled for this date.
-          </div>
+          <div className="no-subjects">No subjects scheduled for this date.</div>
         )}
       </div>
-      <button className="back-home-button" onClick={() => navigate("/")}>⬅ Back to Home</button>
+      <button className="back-home-button" onClick={() => window.location.href = "/"}>⬅ Back to Home</button>
     </div>
   );
 };

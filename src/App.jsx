@@ -5,6 +5,7 @@ import AdminDashboard from "./components/AdminDashboard";
 import TeacherAttendance from "./components/TeacherAttendance";
 import Login from "./components/Login";  // Import Login component
 import Register from "./components/Register";
+import ViewAttendance from "./components/ViewAttendance";
 import "./App.css"; // Import global styles
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/teacherAttendance" element={<TeacherAttendance />} /> 
         <Route path="/register" element={<Register />} /> 
         <Route path="/login" element={<Login />} /> 
+        <Route path="/viewAttendance" element={<ViewAttendance />} />
       </Routes>
     </Router>
   );
