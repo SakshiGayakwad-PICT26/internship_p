@@ -19,8 +19,8 @@ function App() {
         <Route path="/teacherAttendance" element={<TeacherAttendance />} /> 
         <Route path="/register" element={<Register />} /> 
         <Route path="/login" element={<Login />} /> 
-        <Route path="/viewAttendance" element={<ViewAttendance />} />
-        <Route path="/start" element={<Start />} />
+        <Route path="/view-attendance/:subject" element={<ViewAttendance />} />
+         <Route path="/start" element={<Start />} />
       </Routes>
     </Router>
   );
