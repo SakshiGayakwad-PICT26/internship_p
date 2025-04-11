@@ -7,6 +7,7 @@ import Login from "./components/Login";  // Import Login component
 import Register from "./components/Register";
 import ViewAttendance from "./components/ViewAttendance";
 import Start from "./components/Start";
+
 import "./App.css"; // Import global styles
 
 function App() {

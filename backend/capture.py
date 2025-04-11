@@ -6,7 +6,7 @@ from mtcnn import MTCNN
 # Initialize MTCNN detector
 detector = MTCNN()
 
-def capture_images(user_name, save_path="dataset", num_images=300):
+def capture_images(user_name, save_path="dataset", num_images=100):
     user_folder = os.path.join(save_path, user_name)
     os.makedirs(user_folder, exist_ok=True)
     
@@ -40,6 +40,14 @@ def capture_images(user_name, save_path="dataset", num_images=300):
     print("Image capture completed!")
 
 # Run script
+# if __name__ == "__main__":
+#     user_name = input("Enter User Name: ")
+#     capture_images(user_name)
 if __name__ == "__main__":
-    user_name = input("Enter User Name: ")
+    import sys
+    if len(sys.argv) < 2:
+        print("❌ Please provide a user name.")
+        sys.exit(1)
+    user_name = sys.argv[1]
     capture_images(user_name)
+

@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import subprocess
@@ -6,6 +5,9 @@ import os
 import csv
 from datetime import datetime
 import signal
+
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 CORS(app)
@@ -61,11 +63,20 @@ def get_attendance():
                     })
     return jsonify(data)
 
+# @app.route("/run-capture", methods=["POST"])
+# def run_capture():
+#     try:
+#         subprocess.Popen(["python", "capture.py"], shell=False)  # ⬅️ Use shell=False
+#         return jsonify({"status": "Capture script started."})
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
 @app.route("/run-capture", methods=["POST"])
 def run_capture():
     try:
-        subprocess.Popen(["python", "capture.py"], shell=False)  # ⬅️ Use shell=False
-        return jsonify({"status": "Capture script started."})
+        data = request.get_json()
+        user_name = data.get("name", "UnknownUser")
+        subprocess.Popen(["python", "capture.py", user_name], shell=False)
+        return jsonify({"status": f"Capture script started for {user_name}."})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -76,6 +87,30 @@ def run_train():
         return jsonify({"status": "Training script started."})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route("/upload-images", methods=["POST"])
+def upload_images():
+    try:
+        name = request.form.get("name")
+        files = request.files.getlist("images")
+
+        if not name or not files:
+            return jsonify({"error": "Missing name or images"}), 400
+
+        save_path = os.path.join("dataset", secure_filename(name))
+        os.makedirs(save_path, exist_ok=True)
+
+        for file in files:
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(save_path, filename)
+            file.save(file_path)
+
+        return jsonify({"status": f"{len(files)} images uploaded for {name}"}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
